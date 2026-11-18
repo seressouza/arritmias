@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arritmias & Dispositivos — Missão Cardio</title>
+<meta name="description" content="Estudo ativo: arritmias e dispositivos cardíacos implantáveis para a Fisioterapia.">
+<style>
+:root{
+  --bg:#FFF8F1; --ink:#1E2433; --mute:#5E6678; --card:#FFFFFF; --line:#EADFD3;
+  --red:#E63946; --coral:#FF7A59; --amber:#F4A300; --green:#2A9D8F; --teal:#118AB2;
+  --blue:#3D5AFE; --violet:#8E44AD; --pink:#D63384;
+  --ok:#1E8E5A; --warn:#C27C0E; --bad:#C62839;
+  --r:18px; --shadow:0 6px 20px rgba(30,36,51,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer}
+a{color:var(--teal)}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+
+/* Header */
+header.hero{background:linear-gradient(135deg,#E63946 0%,#FF7A59 45%,#F4A300 100%);color:#fff;padding:28px 0 64px;position:relative;overflow:hidden}
+.hero svg.ecg{position:absolute;left:0;right:0;bottom:12px;width:100%;height:60px;opacity:.35}
+.hero .ecg path{stroke:#fff;stroke-width:3;fill:none;stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 3.5s linear infinite}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.hero .ecg path{animation:none;stroke-dashoffset:0}}
+.kicker{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;opacity:.9;font-weight:700}
+h1{font-size:clamp(1.7rem,4.5vw,2.6rem);line-height:1.1;margin:.3rem 0 .4rem}
+.hero p{margin:0;max-width:640px;opacity:.95}
+
+/* Progress */
+.progress{margin-top:-40px;position:relative;z-index:2}
+.pcard{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.bar{flex:1;min-width:180px;height:12px;background:#F1E8DE;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--teal));border-radius:99px;transition:width .4s}
+.pnum{font-weight:800;font-size:1.1rem}
+.psub{color:var(--mute);font-size:.85rem}
+
+/* Tabs */
+nav.tabs{position:sticky;top:0;z-index:5;background:rgba(255,248,241,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-top:18px}
+nav.tabs .wrap{display:flex;gap:6px;overflow-x:auto;padding:10px 16px;scrollbar-width:none}
+nav.tabs button{border:0;background:transparent;padding:9px 14px;border-radius:99px;font-weight:700;color:var(--mute);white-space:nowrap}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:#fff}
+main{padding:22px 0 60px}
+section.view{display:none}
+section.view.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2{font-size:1.4rem;margin:.2rem 0 .3rem}
+.lead{color:var(--mute);margin:0 0 18px}
+
+/* Generic cards */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.mission{border:0;text-align:left;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;position:relative;overflow:hidden;min-height:150px;display:flex;flex-direction:column;gap:6px;transition:transform .15s}
+.mission:hover{transform:translateY(-3px)}
+.mission .num{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.1rem}
+.mission h3{margin:4px 0 0;font-size:1rem;line-height:1.25}
+.mission .meta{color:var(--mute);font-size:.82rem;margin-top:auto}
+.mission .done{position:absolute;top:14px;right:14px;font-size:.75rem;font-weight:800;color:var(--ok);background:#E6F5EE;padding:3px 8px;border-radius:99px}
+.chip{display:inline-block;font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:99px;letter-spacing:.02em}
+.chip.Certo{background:#E6F5EE;color:var(--ok)}
+.chip.Provável{background:#FFF3DC;color:var(--warn)}
+
+/* Mission detail */
+.back{border:0;background:transparent;color:var(--mute);font-weight:700;padding:0;margin-bottom:10px}
+.mhead{border-radius:var(--r);color:#fff;padding:20px;margin-bottom:16px}
+.mhead h2{color:#fff}
+.mhead .where{background:rgba(255,255,255,.18);border-radius:12px;padding:10px 12px;font-size:.88rem;margin-top:10px}
+details.q{background:var(--card);border-radius:14px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+details.q summary{list-style:none;padding:14px 16px;font-weight:700;display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary .qn{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:.85rem}
+details.q summary .plus{margin-left:auto;flex:none;transition:transform .2s;color:var(--mute)}
+details.q[open] summary .plus{transform:rotate(45deg)}
+.ans{padding:0 16px 16px 56px}
+.think{background:#F7F2EC;border-radius:12px;padding:10px 12px;font-size:.88rem;color:var(--mute);margin-bottom:10px}
+.src{font-size:.8rem;color:var(--mute);margin-top:8px}
+.pearl{border-left:5px solid var(--amber);background:#FFFBF2;border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.pearl b.t{color:var(--warn)}
+.mark{margin-top:14px;border:0;border-radius:12px;padding:12px 16px;font-weight:800;color:#fff;background:var(--green);width:100%}
+.mark.is{background:#E6F5EE;color:var(--ok)}
+
+/* Cases */
+.case .tags{font-size:.8rem;color:var(--mute)}
+.opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:#fff;border-radius:12px;padding:11px 14px;margin:8px 0;transition:border-color .15s}
+.opt:hover{border-color:var(--teal)}
+.opt.right{border-color:var(--ok);background:#E6F5EE}
+.opt.wrong{border-color:var(--bad);background:#FDECEE}
+.opt[disabled]{cursor:default;opacity:1;color:var(--ink)}
+.opt[disabled]:not(.right):not(.wrong){opacity:.55}
+.fb{border-radius:12px;padding:12px 14px;margin-top:8px;display:none}
+.fb.show{display:block}
+.fb.ok{background:#E6F5EE}
+.fb.no{background:#FDECEE}
+.score{font-weight:800}
+
+/* Flashcards */
+.flash{perspective:1000px;max-width:620px;margin:0 auto}
+.fc{position:relative;min-height:300px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.fc.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--r);box-shadow:var(--shadow);padding:22px;display:flex;flex-direction:column;overflow:auto}
+.front{color:#fff;justify-content:center}
+.front .qt{font-size:1.2rem;font-weight:800;line-height:1.3}
+.face.fb-back{background:#fff;transform:rotateY(180deg);font-size:.93rem}
+.fctrl{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:800;background:var(--ink);color:#fff}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+.hint{text-align:center;color:var(--mute);font-size:.85rem;margin-top:8px}
+@media (prefers-reduced-motion:reduce){.fc{transition:none}}
+
+/* Rules */
+.rule{display:flex;gap:14px;align-items:flex-start}
+.rule .n{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:1.2rem}
+.legend{font-size:.85rem;color:var(--mute)}
+footer{color:var(--mute);font-size:.8rem;text-align:center;padding:24px 16px 40px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Fisioterapia Aplicada à Cardiologia</div>
+    <h1>Missão Cardio: arritmias e dispositivos implantáveis</h1>
+    <p>8 missões, 4 casos clínicos e 32 perguntas com resposta e fonte. Tente responder antes de abrir.</p>
+  </div>
+  <svg class="ecg" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 35 H180 l12 -6 l12 6 H250 l8 8 l10 -40 l10 50 l8 -18 H320 l14 -8 l14 8 H520 l12 -6 l12 6 H590 l8 8 l10 -40 l10 50 l8 -18 H660 l14 -8 l14 8 H860 l12 -6 l12 6 H930 l8 8 l10 -40 l10 50 l8 -18 H1000 l14 -8 l14 8 H1200"/>
+  </svg>
+</header>
+
+<div class="wrap progress">
+  <div class="pcard">
+    <div><div class="pnum" id="pnum">0 de 8 missões</div><div class="psub" id="psub">Casos: 0 de 4 resolvidos</div></div>
+    <div class="bar" aria-hidden="true"><i id="pbar"></i></div>
+    <button class="btn ghost" id="reset" title="Apagar o progresso salvo neste aparelho">Recomeçar</button>
+  </div>
+</div>
+
+<nav class="tabs" aria-label="Seções">
+  <div class="wrap" role="tablist">
+    <button role="tab" data-v="inicio" aria-selected="true">Início</button>
+    <button role="tab" data-v="missoes" aria-selected="false">Missões</button>
+    <button role="tab" data-v="casos" aria-selected="false">Casos clínicos</button>
+    <button role="tab" data-v="flash" aria-selected="false">Flashcards</button>
+    <button role="tab" data-v="regras" aria-selected="false">Regras de ouro</button>
+    <button role="tab" data-v="fontes" aria-selected="false">Fontes</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="view on" id="v-inicio">
+    <div class="card" style="border-top:6px solid var(--red)">
+      <div class="kicker" style="color:var(--red)">Pergunta para começar</div>
+      <p style="font-size:1.15rem;font-weight:700;margin:.4rem 0" id="gancho"></p>
+      <p class="legend">Guarde sua resposta. O caso 1 volta a ela.</p>
+    </div>
+    <div class="card">
+      <h2>Como estudar aqui</h2>
+      <ol>
+        <li><b>Missões:</b> cada tema tem 4 perguntas. Leia a pergunta, responda de cabeça e só então abra a resposta.</li>
+        <li><b>Casos clínicos:</b> escolha a conduta e veja a justificativa com a fonte.</li>
+        <li><b>Flashcards:</b> revisão rápida das 32 perguntas, em ordem aleatória.</li>
+      </ol>
+      <p class="legend">Na aula, cada trio entregava: <span id="entregavel"></span>.</p>
+      <p class="legend"><span class="chip Certo">Certo</span> está na diretriz indicada ou é fisiologia/suporte de vida consolidado. <span class="chip Provável">Provável</span> é síntese da prática clínica que a diretriz não descreve passo a passo. Seu progresso fica salvo só neste aparelho.</p>
+    </div>
+    <button class="btn" data-go="missoes" style="width:100%;padding:14px">Começar as missões</button>
+  </section>
+
+  <section class="view" id="v-missoes">
+    <div id="mlist">
+      <h2>Missões</h2>
+      <p class="lead">Escolha um tema. Comece pelo que o seu trio <b>não</b> apresentou.</p>
+      <div class="grid" id="mgrid"></div>
+    </div>
+    <div id="mdetail" hidden></div>
+  </section>
+
+  <section class="view" id="v-casos">
+    <h2>Casos clínicos</h2>
+    <p class="lead">Escolha a conduta. Cada caso cruza mais de um tema. <span class="score" id="cscore"></span></p>
+    <div id="clist"></div>
+  </section>
+
+  <section class="view" id="v-flash">
+    <h2>Flashcards</h2>
+    <p class="lead">Toque no cartão para virar. As cores indicam o tema.</p>
+    <div class="flash">
+      <div class="fc" id="fc" tabindex="0" role="button" aria-label="Virar cartão">
+        <div class="face front" id="ffront"></div>
+        <div class="face fb-back" id="fback"></div>
+      </div>
+      <div class="fctrl">
+        <button class="btn ghost" id="fprev">Anterior</button>
+        <button class="btn" id="fflip">Virar</button>
+        <button class="btn ghost" id="fnext">Próximo</button>
+        <button class="btn ghost" id="fshuf">Embaralhar</button>
+      </div>
+      <div class="hint" id="fpos"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-regras">
+    <h2>3 regras de ouro</h2>
+    <p class="lead">Se você lembrar só disso, já atende melhor.</p>
+    <div id="rlist"></div>
+  </section>
+
+  <section class="view" id="v-fontes">
+    <h2>Fontes</h2>
+    <p class="lead">As quatro diretrizes estão na pasta da disciplina no Drive.</p>
+    <div class="card"><ul id="flist"></ul>
+      <p class="legend">Os critérios de instabilidade hemodinâmica vêm das diretrizes de suporte avançado de vida da American Heart Association (ACLS), que não fazem parte da pasta.</p>
+    </div>
+  </section>
+</main>
+
+<footer>Material de estudo da disciplina Fisioterapia Aplicada à Cardiologia. Não substitui a avaliação clínica nem a leitura das diretrizes.</footer>
+
+<script>
+const DATA = {"temas": [{"n": 1, "titulo": "Bradiarritmias e doença do nó sinusal", "onde": "ECG 2022, seções 4.1.1.1 a 4.1.1.6 (bloqueios AV) · DCEI 2023, seção 2.1 (doença do nó sinusal)", "perguntas": [{"q": "Como reconhecer no ECG o BAV de 1º grau, o de 2º grau Mobitz I e Mobitz II, o BAV 2:1 e o BAV total?", "tag": "Certo", "a": "<b>1º grau:</b> PR acima de 200 ms (adulto, FC 50–90 bpm); toda P conduz. <b>Mobitz I:</b> o PR aumenta progressivamente, com acréscimos cada vez menores, até uma P ser bloqueada (Wenckebach); o PR após a pausa é o mais curto. <b>Mobitz II:</b> PR fixo e, de repente, uma P bloqueada; o bloqueio é intra/infra His-Purkinje. <b>2:1:</b> alterna uma P conduzida e uma bloqueada (excluir extrassístole atrial não conduzida). <b>Avançado:</b> condução em menos de 50% das P (3:1, 4:1). <b>BAV total:</b> P e QRS sem relação (dissociação AV), frequência atrial maior que a do escape.", "src": "ECG 2022, 4.1.1.1 a 4.1.1.6"}, {"q": "Quais manifestações eletrocardiográficas definem a doença do nó sinusal?", "tag": "Certo", "a": "Uma ou mais destas: bradicardia sinusal; pausa ou parada sinusal; bloqueio sinoatrial; taquiarritmias atriais (sobretudo flutter ou FA) alternando com pausas (síndrome bradi-taqui); e incompetência cronotrópica. Só é \"doença\" quando dá sintomas: palpitação, cansaço, dispneia, tontura, pré-síncope ou síncope. É a indicação de cerca de metade dos marca-passos definitivos.", "src": "DCEI 2023, 2.1"}, {"q": "Por que uma bradicardia derruba o débito cardíaco? Use DC = FC × VS.", "tag": "Certo", "a": "Se a FC cai e o volume sistólico não sobe na mesma proporção, o DC cai. Em repouso, um coração saudável compensa parcialmente com maior enchimento diastólico (VS maior). No cardiopata essa reserva é pequena, e no esforço quase todo o aumento do DC depende da FC. Por isso a bradicardia aparece como cansaço, tontura ou síncope, sobretudo ao esforço.", "src": "fisiologia cardiovascular (conhecimento consolidado)"}, {"q": "O que é incompetência cronotrópica e por que ela importa no exercício?", "tag": "Certo", "a": "É a resposta inadequada da FC ao exercício ou ao estresse; faz parte da definição da doença do nó sinusal. Na prática: o paciente cansa cedo porque a FC não sobe. A FC deixa de ser um bom guia de intensidade, e fórmulas por idade erram ainda mais (betabloqueador piora). A prescrição passa a usar teste de esforço, cargas e percepção de esforço.", "src": "DCEI 2023, 2.1 · REAB 2020 (não usar FC predita pela idade)"}], "perolas": [{"tag": "Certo", "t": "Mobitz I: o PR aumenta progressivamente até uma P bloqueada (Wenckebach). Mobitz II: PR fixo e uma P bloqueada de repente; o bloqueio é intra/infra His-Purkinje, por isso é o mais perigoso.", "src": "ECG 2022, 4.1.1.2–4.1.1.3"}, {"tag": "Certo", "t": "A doença do nó sinusal é a indicação mais comum de marca-passo no mundo, cerca de metade dos implantes. A síncope aparece em cerca de 50% dos pacientes encaminhados ao implante por essa causa.", "src": "DCEI 2023, 2.1"}, {"tag": "Certo", "t": "Incompetência cronotrópica (FC que não sobe no esforço ou no estresse) faz parte da definição da doença do nó sinusal. É o paciente que \"cansa cedo\" com a FC parada.", "src": "DCEI 2023, 2.1"}]}, {"n": 2, "titulo": "Taquiarritmias supraventriculares", "onde": "ECG 2022, seções 3.2.3.5 (taquicardia sinusal), 3.2.4.1 (FA), 3.2.4.2 (flutter), 3.2.4.5 (reentrada nodal), 3.2.7", "perguntas": [{"q": "Como diferenciar no ECG taquicardia sinusal, taquicardia por reentrada nodal, flutter e FA?", "tag": "Certo", "a": "<b>Taquicardia sinusal:</b> ritmo sinusal (P normal antes de cada QRS) com FC de 100 bpm ou mais. <b>Reentrada nodal (TRN):</b> regular, QRS estreito, P retrógrada escondida no QRS ou logo após (pseudo-s em parede inferior, pseudo-r' em V1; RP abaixo de 80 ms). <b>Flutter:</b> ondas F em dentes de serrote, regulares, 240–340 bpm. <b>FA:</b> sem onda P, linha de base com ondas f irregulares, RR irregular.", "src": "ECG 2022, 3.2.3.5, 3.2.4.1, 3.2.4.2, 3.2.4.5"}, {"q": "Por que na FA não há onda P e os intervalos RR são irregulares?", "tag": "Certo", "a": "Os átrios têm atividade elétrica desorganizada, a 450–700 ciclos por minuto: não há despolarização atrial única, então não há P, só ondas f. O nó AV recebe esses impulsos caóticos e conduz só parte deles, em momentos aleatórios, daí o RR irregular. Pérola: RR regular em paciente com FA indica dissociação atrioventricular (por exemplo, BAV total com escape).", "src": "ECG 2022, 3.2.4.1"}, {"q": "Como são as ondas F do flutter e em que frequência aparecem?", "tag": "Certo", "a": "Flutter comum (usa o istmo cavotricuspídeo): ondas F em dentes de serrote, 240–340 bpm, negativas em DII, DIII e aVF e geralmente positivas em V1. No flutter reverso são mais rápidas (340–430 bpm). Condução maior que 2:1 facilita ver as ondas F; no 2:1, parte delas se esconde no QRS e na onda T.", "src": "ECG 2022, 3.2.4.2"}, {"q": "O que significa \"QRS estreito\" sobre a origem do ritmo?", "tag": "Certo", "a": "QRS estreito (menos de 120 ms) indica que os ventrículos foram ativados pelo sistema His-Purkinje normal, ou seja, o ritmo nasceu acima do feixe de His: é supraventricular. O contrário não vale sempre: uma supraventricular pode ter QRS largo por aberrância ou bloqueio de ramo, e aí precisa ser diferenciada de TV.", "src": "ECG 2022, 3.2.2 e 3.2.8"}], "perolas": [{"tag": "Certo", "t": "Flutter comum: ondas F \"em dentes de serrote\" de 240 a 340 bpm, negativas em DII, DIII e aVF. Condução maior que 2:1 facilita ver as ondas F.", "src": "ECG 2022, 3.2.4.2"}, {"tag": "Provável", "t": "Com condução 2:1, o flutter dá FC ventricular regular perto de 150 bpm que não varia com o esforço. A FC regular \"cravada\" é a pista.", "src": "dedução a partir do ECG 2022, 3.2.4.2"}]}, {"n": 3, "titulo": "Taquiarritmias ventriculares e repercussão hemodinâmica", "onde": "ECG 2022, seções 5.1.4.3 (arritmias ventriculares) e 5.1.4.4 (taquicardias de QRS largo)", "perguntas": [{"q": "Como reconhecer extrassístole ventricular, TV monomórfica, TV polimórfica, torsades de pointes e FV?", "tag": "Certo", "a": "<b>Extrassístole ventricular:</b> batimento precoce, QRS geralmente acima de 120 ms, sem P antes, geralmente seguido de pausa pós-extrassistólica; pode ser isolada, pareada, bigeminada etc. <b>TV:</b> 3 ou mais batimentos ventriculares seguidos acima de 100 bpm; <b>monomórfica</b> quando todos os QRS têm a mesma forma, <b>polimórfica</b> com 3 ou mais morfologias. <b>Torsades:</b> TV polimórfica com QRS \"girando\" em torno da linha de base, precedida de QT longo e ciclo longo-curto. <b>FV:</b> ondas bizarras, caóticas, de amplitude e frequência variáveis, sem QRS identificável: é parada cardiorrespiratória.", "src": "ECG 2022, 5.1.4.3.1, 5.1.4.3.5 e 5.1.4.3.9"}, {"q": "Qual a diferença entre TV sustentada e não sustentada?", "tag": "Certo", "a": "Sustentada: dura mais de 30 segundos e/ou causa instabilidade hemodinâmica. Não sustentada (TVNS): 3 ou mais batimentos, termina sozinha em menos de 30 s e sem instabilidade.", "src": "ECG 2022, 5.1.4.3.5 e 5.1.4.3.5.5"}, {"q": "Por que a TV compromete o enchimento ventricular e a PA?", "tag": "Certo", "a": "Três motivos: (1) a FC alta encurta a diástole e reduz o enchimento; (2) perde-se a contração atrial sincronizada (o \"kick\" atrial); (3) a ativação ventricular é feita célula a célula, fora do sistema de condução, e a contração fica dessincronizada. Menos enchimento e contração ineficiente reduzem o VS, o DC e a PA, mais ainda em ventrículo já doente.", "src": "fisiologia cardiovascular (conhecimento consolidado)"}, {"q": "Quais sinais mostram que o paciente está instável?", "tag": "Certo", "a": "Os sinais clássicos de instabilidade em taquiarritmia: hipotensão; alteração aguda do nível de consciência; sinais de choque (pele fria, sudorese, enchimento capilar lento); dor torácica isquêmica; insuficiência cardíaca aguda (dispneia, congestão). Sem pulso, é parada cardíaca: RCP e desfibrilação.", "src": "AHA, suporte avançado de vida (ACLS) — não está nas 4 diretrizes da pasta"}], "perolas": [{"tag": "Certo", "t": "TV sustentada × não sustentada: o corte é 30 segundos e/ou a presença de instabilidade hemodinâmica.", "src": "ECG 2022, 5.1.4.3.5.5"}, {"tag": "Certo", "t": "TV sem pulso e FV são parada cardíaca: o caminho é RCP e desfibrilação, não \"observar\".", "src": "conhecimento consolidado (suporte de vida)"}]}, {"n": 4, "titulo": "FA e prescrição de exercício", "onde": "FA 2025, seções 4.4.2 (sedentarismo), 5.1 (manifestações clínicas), 6.7 (risco de sangramento), 7.4.1 (meta de FC) · REAB 2020, Tabela 3 (métodos de intensidade) e 6.7.4", "perguntas": [{"q": "Por que o ritmo da FA limita a resposta ao esforço?", "tag": "Certo", "a": "O ritmo irregular e a resposta ineficiente limitam a capacidade do coração de atender à demanda do exercício: o paciente fadiga cedo e relata \"perda de rendimento\". Também é comum a FC subir desproporcionalmente no esforço, porque a adrenalina facilita a condução pelo nó AV. A perda da contração atrial reduz ainda o enchimento ventricular.", "src": "FA 2025, 5.1"}, {"q": "Por que a FC não é um bom parâmetro de intensidade na FA? O que usar no lugar?", "tag": "Certo", "a": "Porque a FC é irregular, sobe de forma desproporcional e é difícil de medir com precisão num ritmo irregular. A diretriz de reabilitação manda usar <b>cargas e percepção subjetiva de esforço</b> quando a FC não é bom parâmetro, citando a FA. Intensidade moderada: Borg 2–4 (escala 0–10) ou 10–13 (escala 6–20), ou o teste da fala (ofegante, mas completa uma frase sem pausas). Para contar a FC na FA, o ECG usa 6 s de traçado × 10.", "src": "REAB 2020, 6.7.4 e Tabela 3 · ECG 2022, 3.2.4.1"}, {"q": "O que a diretriz de FA recomenda sobre atividade física regular?", "tag": "Certo", "a": "Programa de atividade física regular para prevenir FA quando não houver contraindicação: recomendação I B. Exercício de alto desempenho não deve ser indicado para prevenção (III B). A relação é em \"U\": sedentarismo e exercício extenuante aumentam o risco. No paciente com FA, o treino melhora capacidade de esforço, qualidade de vida e FEVE; no CARDIO-FIT, cada MET ganho reduziu em 9% a recorrência.", "src": "FA 2025, tabela de recomendações do cap. 4 e 4.4.2"}, {"q": "Paciente com FA, idoso, anticoagulado, com história de quedas: o exercício deve ser suspenso?", "tag": "Certo", "a": "Não. A diretriz afirma que história de quedas não é preditor independente de sangramento em quem usa anticoagulante oral direto (ACOD), e estima que seriam necessárias cerca de 295 quedas por ano para o risco de sangramento superar o benefício. A conduta é manter o exercício com prevenção de quedas (supervisão, treino de equilíbrio, ambiente seguro).", "src": "FA 2025, 6.7"}], "perolas": [{"tag": "Certo", "t": "A Reabilitação 2020 diz que, quando a FC não é bom parâmetro, como na FA ou no ritmo de marca-passo, usam-se as cargas e a percepção subjetiva de esforço.", "src": "REAB 2020, 6.7.4"}, {"tag": "Certo", "t": "Intensidade moderada: Borg 2 a 4 na escala 0–10, ou 10 a 13 na escala 6–20, ou o teste da fala (ofegante, mas completa uma frase sem pausas).", "src": "REAB 2020, Tabela 3"}, {"tag": "Certo", "t": "Atividade física regular é recomendação I B para prevenir FA quando não houver contraindicações. A relação é em \"U\": o sedentarismo e o exercício extenuante aumentam o risco.", "src": "FA 2025, tabela de recomendações do cap. 4 e 4.4.2"}, {"tag": "Certo", "t": "Meta de FC de repouso abaixo de 80 bpm. O controle leniente (abaixo de 110 bpm) em pacientes assintomáticos não aumentou os eventos.", "src": "FA 2025, 7.4.1"}, {"tag": "Certo", "t": "História de quedas não é preditor independente de sangramento em uso de anticoagulante oral direto: seriam necessárias cerca de 295 quedas por ano para o risco superar o benefício.", "src": "FA 2025, 6.7"}]}, {"n": 5, "titulo": "Arritmia durante a sessão: conduta e critérios de interrupção", "onde": "REAB 2020, seções 2.1.4 (papel do fisioterapeuta), 3.1 (risco alto), 6.2.4 (PA no exercício) e Tabela 10", "perguntas": [{"q": "Quais alterações de ritmo, PA e sintomas indicam parar ou reduzir o exercício?", "tag": "Certo", "a": "<b>Sintomas:</b> angina ou equivalente, ou sinais de intolerância. <b>PA:</b> PAS em platô ou queda com o aumento da carga; PAS acima de 220 ou PAD acima de 115 mmHg. No hipertenso, manter abaixo de 220/105 mmHg; acima disso, interromper ou reduzir. <b>Ritmo:</b> BAV de 2º e 3º grau, FA, taquicardia supraventricular ou arritmia ventricular complexa. <b>ECG:</b> infra de ST acima de 1 mm. Atenção: a Tabela 10 foi feita para valvopatas; as diretrizes da pasta não trazem uma lista única de critérios de interrupção.", "src": "REAB 2020, Tabela 10 e 6.2.4"}, {"q": "Qual é a sequência de conduta quando surge a arritmia (parar, posicionar, sinais vitais, ECG, comunicar, registrar)?", "tag": "Provável", "a": "1. Parar o exercício. 2. Sentar ou deitar o paciente. 3. Avaliar consciência, pulso, PA, SpO2 e sintomas. 4. Registrar o ritmo (monitor ou ECG de 12 derivações, se possível ainda durante a arritmia). 5. Instável ou sem pulso: acionar a equipe e iniciar suporte de vida (RCP, DEA). Estável: comunicar o médico e aguardar a reavaliação antes de retomar. 6. Registrar tudo no prontuário. A diretriz exige que a equipe saiba identificar e atender intercorrências e que o fisio tenha treinamento periódico em suporte básico com DEA.", "src": "sequência de prática clínica (não descrita passo a passo nas diretrizes) · REAB 2020, 2.1.4 e 3.1"}, {"q": "Como diferenciar o paciente estável do instável?", "tag": "Certo", "a": "Estável: consciente, com pulso e PA adequada, sem dor torácica, sem congestão. Instável: hipotensão, rebaixamento de consciência, sinais de choque, dor torácica isquêmica ou IC aguda. A diferença muda a conduta: no estável há tempo para ECG e avaliação médica; no instável a prioridade é o suporte de vida.", "src": "AHA, suporte avançado de vida (ACLS) — não está nas 4 diretrizes da pasta"}, {"q": "Por que a avaliação pré-participação é a melhor prevenção de intercorrências?", "tag": "Certo", "a": "Porque ela define o risco do paciente (alto, intermediário, baixo) e os limites do treino antes da primeira sessão: consulta, exame físico, ECG de repouso e teste ergométrico ou cardiopulmonar. O teste mostra em que FC e carga aparecem arritmia, isquemia ou queda de PA; a prescrição fica abaixo disso (por exemplo, 10 bpm abaixo da FC da anormalidade). Arritmia ventricular complexa, por si, classifica o paciente como alto risco.", "src": "REAB 2020, 3.1 e 6.7.4"}], "perolas": [{"tag": "Certo", "t": "A Tabela 10 lista os limites do esforço: sinais e sintomas de intolerância; PAS em platô ou em queda, PAS acima de 220 ou PAD acima de 115 mmHg; infra de ST acima de 1 mm; BAV de 2º e 3º grau, FA, taquicardia supraventricular ou arritmia ventricular complexa.", "src": "REAB 2020, Tabela 10 (montada para valvopatas, mas os critérios servem de modelo)"}, {"tag": "Certo", "t": "No hipertenso, a PA deve ficar abaixo de 220/105 mmHg durante o exercício. Acima disso, considerar interromper ou reduzir a carga.", "src": "REAB 2020, 6.2.4"}, {"tag": "Certo", "t": "O fisioterapeuta deve ter treinamento periódico em suporte básico de vida, incluindo o desfibrilador externo automático.", "src": "REAB 2020, 2.1.4"}, {"tag": "Provável", "t": "As diretrizes lidas não trazem uma lista única de \"critérios de interrupção da sessão\". A Tabela 10 é a referência mais próxima: diga isso aos alunos.", "src": "alerta de lacuna"}]}, {"n": 6, "titulo": "Marca-passo: código, modos e resposta de frequência", "onde": "ECG 2022, seção 14 e Tabela 14.2 (código de 5 letras) · REAB 2020, 6.8.3 e 6.8.4", "perguntas": [{"q": "O que significa cada letra do código do marca-passo (ex.: VVI, AAI, DDD, DDDR)?", "tag": "Certo", "a": "I = câmara estimulada; II = câmara sentida (A, V, D = ambas, O = nenhuma); III = resposta ao que sente (I = inibe, T = deflagra, D = as duas); IV = modulação de frequência (R); V = funções multissítio. <b>VVI:</b> estimula e sente o ventrículo; inibe se houver QRS próprio. <b>AAI:</b> o mesmo no átrio. <b>DDD:</b> estimula e sente átrio e ventrículo, mantendo a sincronia AV. <b>DDDR:</b> DDD com sensor que aumenta a FC no esforço.", "src": "ECG 2022, Tabela 14.2"}, {"q": "Como aparece a espícula no ECG e o que é perda de captura?", "tag": "Certo", "a": "A espícula é o traço vertical do estímulo elétrico do dispositivo, antes da P (estimulação atrial) ou do QRS (ventricular, que fica largo). No modo unipolar ela é grande; no bipolar, pequena, às vezes quase invisível. <b>Perda de captura:</b> há espícula, mas sem P ou QRS depois dela; a câmara não foi despolarizada. É sinal de disfunção (por exemplo, deslocamento do eletrodo) e deve ser comunicada.", "src": "ECG 2022, 14.1, 14.1.1 e 14.1.2"}, {"q": "O que o \"R\" (sensor de frequência) muda no exercício?", "tag": "Certo", "a": "O sensor aumenta a FC no esforço em quem não tem resposta sinusal adequada (FA com BAV, doença do nó sinusal). Sem sensor, a FC fica fixa. Como a resposta é artificial, prescrever por FC fica impreciso: preferir cargas e percepção de esforço. O sensor mais comum é um acelerômetro (movimento vertical): responde bem na esteira, caminhada e corrida, mas na bicicleta ergométrica quase não ativa, e a FC sobe pouco.", "src": "REAB 2020, 6.8.4"}, {"q": "Que informações do marca-passo o fisio precisa antes de prescrever?", "tag": "Certo", "a": "Motivo do implante, função ventricular, presença de arritmias e os ajustes do aparelho: modo de programação, limites de FC programados (mínimo e máximo), tipo e adaptação do sensor. Se possível, teste de esforço para ver o comportamento do dispositivo. Cuidado: monitor e frequencímetro podem errar a FC por causa das espículas; confira manualmente.", "src": "REAB 2020, 6.8.3"}], "perolas": [{"tag": "Certo", "t": "Código: I = câmara estimulada, II = câmara sentida, III = resposta à sensibilidade (I inibe, T deflagra, D dupla), IV = modulação de frequência (R), V = funções multissítio.", "src": "ECG 2022, Tabela 14.2"}, {"tag": "Certo", "t": "Antes de prescrever: motivo do implante, modo de programação, limites de FC programados e tipo de sensor.", "src": "REAB 2020, 6.8.3"}, {"tag": "Certo", "t": "O sensor mais comum é um acelerômetro, que capta movimento vertical. Na esteira ele funciona; na bicicleta ergométrica quase não ativa, e a FC sobe pouco.", "src": "REAB 2020, 6.8.4"}, {"tag": "Certo", "t": "Se a FC máxima programada for menor que a resposta sinusal, aparece o Wenckebach eletrônico (platô de FC). No bloqueio 2:1 pode haver queda súbita da FC no esforço. Nesses casos, prescrever por carga e percepção de esforço.", "src": "REAB 2020, 6.8.4"}, {"tag": "Certo", "t": "Monitor e frequencímetro podem errar a FC por causa da espícula: confira manualmente.", "src": "REAB 2020, 6.8.3"}]}, {"n": 7, "titulo": "CDI e terapia de ressincronização (TRC)", "onde": "REAB 2020, 6.8, 6.8.1, 6.8.2 e 6.8.4 (Tabela 11) · DCEI 2023, Quadro 1 e seção de TRC na FA", "perguntas": [{"q": "Para que serve o CDI e quais terapias ele aplica (choque e burst/ATP)?", "tag": "Certo", "a": "O CDI tem as funções de um marca-passo e, além disso, detecta e trata automaticamente taquiarritmias ventriculares potencialmente fatais. Serve para prevenção primária ou secundária de morte súbita. Terapias: <b>ATP/burst</b> (estimulação ventricular rápida programada que interrompe a TV, sem dor) e <b>choque</b> (cardioversão ou desfibrilação).", "src": "DCEI 2023, Quadro 1 · REAB 2020, 6.8"}, {"q": "Qual deve ser o teto de FC no treino de quem tem CDI?", "tag": "Certo", "a": "Entre 10 e 20 bpm abaixo da FC programada para a terapia (choque ou burst). Exemplo: terapia programada em 170 bpm, teto de 150–160 bpm. É mais crítico no jovem, que atinge FC alta no treino; no idoso com IC em betabloqueador, a FC pico costuma ficar abaixo da zona de terapia.", "src": "REAB 2020, 6.8.4"}, {"q": "O exercício aumenta o risco de choque? O que dizem as meta-análises?", "tag": "Certo", "a": "Não. Os choques associados ao exercício foram em média 2,2%, semelhante ao período sem exercício. Outra meta-análise mostrou menos choques no seguimento em quem fazia reabilitação. O treino aumentou o VO2 em cerca de 2,4 ml/kg/min. Recomendações: exercício para ganho de capacidade no portador de CDI estável, I A; para possível redução de choques, IIa B.", "src": "REAB 2020, 6.8.1 e Tabela 11"}, {"q": "Para que serve a TRC e por que a porcentagem de estimulação biventricular importa?", "tag": "Certo", "a": "A TRC estimula os dois ventrículos para corrigir a dissincronia; o foco é o tratamento adjuvante da IC avançada. O benefício exige estimulação biventricular quase o tempo todo: abaixo de 95% é considerado subótimo, e os ganhos aparecem com 97–100%. FA com condução rápida ou FC alta reduzem essa porcentagem: cerca de 7% a menos a cada 10 bpm a mais. Para o fisio: FC muito alta no treino pode tirar o paciente da ressincronização.", "src": "DCEI 2023, Quadro 1 e seção de TRC na FA"}], "perolas": [{"tag": "Certo", "t": "Limitar a intensidade a 10–20 bpm abaixo da FC programada para a terapia (choque ou burst). Isso pesa mais no jovem, que atinge FC alta no treino.", "src": "REAB 2020, 6.8.4"}, {"tag": "Certo", "t": "O exercício é seguro: a taxa média de choques ligados ao exercício foi de 2,2%, semelhante à de fora do exercício. A RCV teve menos choques no seguimento.", "src": "REAB 2020, 6.8.1"}, {"tag": "Certo", "t": "Exercício para aumentar a capacidade física no portador de CDI estável: recomendação I A.", "src": "REAB 2020, Tabela 11"}, {"tag": "Certo", "t": "O benefício da TRC depende de estimular quase sempre os dois ventrículos: os estudos citam mais de 95% e o ganho aparece com 97–100%.", "src": "DCEI 2023, TRC na FA"}]}, {"n": 8, "titulo": "Pós-implante imediato e orientações ao paciente", "onde": "REAB 2020, 6.8.5 (treino resistido) e 6.8.6 (eletroestimulação) · DCEI 2023, seção 1 (relatório cirúrgico e pós-operatório)", "perguntas": [{"q": "Quais cuidados com o membro superior do lado do implante, e por quanto tempo?", "tag": "Certo", "a": "Até a cicatrização, para evitar lesão vascular, deslocamento do gerador e fratura de eletrodos: cautela com pesos e com elevação excessiva dos membros superiores nas primeiras <b>6 semanas</b>, e evitar movimentos repetitivos e intensos com o braço do implante. A própria diretriz observa que essas restrições pesam mais em pacientes de esporte do que em exercícios de reabilitação.", "src": "REAB 2020, 6.8.5"}, {"q": "Imobilizar o ombro é necessário? O que a evidência mostra sobre mobilização precoce?", "tag": "Certo", "a": "A diretriz não recomenda imobilizar. Num estudo com mobilização precoce e supervisionada da cintura escapular logo após o implante de marca-passo, não houve complicações com o dispositivo. A conduta é mobilizar com supervisão, sem carga e sem elevação excessiva.", "src": "REAB 2020, 6.8.5"}, {"q": "Quais complicações do implante o fisio precisa reconhecer?", "tag": "Certo", "a": "A diretriz lista: pneumotórax, hemotórax, falha de captura e/ou de sensibilidade, má conexão eletrodo-gerador, deslocamento do cabo-eletrodo, perfuração do VD, estimulação diafragmática, hematoma na loja do gerador, contaminação e arritmias. Na beira do leito: dispneia ou dor pleurítica (pneumotórax), loja abaulada ou dolorosa (hematoma, infecção), soluço persistente (estimulação diafragmática), espícula sem QRS ou bradicardia (perda de captura).", "src": "DCEI 2023, seção 1 (relatório de cirurgia) · sinais à beira do leito: dedução clínica"}, {"q": "Pode usar eletroestimulação neuromuscular em portador de dispositivo? Em que condições?", "tag": "Certo", "a": "Pode, com restrições (recomendação IIb B): dispositivo com sensores bipolares; apenas em quadríceps e glúteos, longe do implante; após excluir dependência de marca-passo, IC aguda, angina instável e arritmia ventricular nos últimos 3 meses; com supervisão médica regular e avaliação do dispositivo após o uso. A evidência ainda é pequena.", "src": "REAB 2020, 6.8.6 e Tabela 11"}], "perolas": [{"tag": "Certo", "t": "Cautela com pesos e elevação excessiva dos MMSS nas primeiras 6 semanas; evitar movimentos repetitivos e intensos com o braço do implante.", "src": "REAB 2020, 6.8.5"}, {"tag": "Certo", "t": "Um estudo com mobilização precoce e supervisionada da cintura escapular logo após o implante não teve complicações com o dispositivo.", "src": "REAB 2020, 6.8.5"}, {"tag": "Certo", "t": "Complicações listadas: pneumotórax, hemotórax, falha de captura, deslocamento do eletrodo, estimulação diafragmática, hematoma da loja e arritmias.", "src": "DCEI 2023, seção 1"}, {"tag": "Provável", "t": "Soluço persistente após o implante sugere estimulação diafragmática: comunique a equipe.", "src": "dedução a partir do DCEI 2023, seção 1"}, {"tag": "Certo", "t": "Eletroestimulação: só em quadríceps e glúteos, longe do implante, com sensores bipolares, excluídos dependência de marca-passo, IC aguda, angina instável e arritmia ventricular nos últimos 3 meses (recomendação IIb B).", "src": "REAB 2020, 6.8.6 e Tabela 11"}]}], "casos": [{"n": 1, "titulo": "FA no cicloergômetro", "temas": "2, 4, 5", "texto": "Homem, 72 anos, FA permanente, IC com fração de ejeção reduzida, 4ª sessão de reabilitação. No cicloergômetro, o oxímetro oscila entre 95 e 150 bpm. Refere Borg 15 (escala 6–20). PA 132/80, sem sintomas.", "opcoes": ["Seguir: a PA está normal.", "Interromper e encaminhar ao médico.", "Reduzir a carga até Borg 10–13 e conferir a FC no monitor ou por ausculta.", "Calcular a FC-alvo por Karvonen e ajustar por ela."], "gabarito": "C", "justificativa": "Na FA a FC não é bom parâmetro: usa-se carga e percepção de esforço (REAB 2020, 6.7.4). Borg 15 está acima da faixa moderada de 10–13 (Tabela 3). D é o erro mais comum."}, {"n": 2, "titulo": "CDI e o teto de FC", "temas": "3, 7", "texto": "Mulher, 58 anos, cardiomiopatia, CDI com terapia programada a partir de 170 bpm. Na esteira, a FC sinusal chega a 162 bpm e continua subindo. Sem sintomas.", "opcoes": ["Seguir: é taquicardia sinusal, não arritmia.", "Reduzir a carga e manter a FC entre 150 e 160 bpm, no máximo.", "Interromper e encaminhar para a emergência.", "Aumentar a carga, porque o CDI protege."], "gabarito": "B", "justificativa": "O teto é de 10–20 bpm abaixo da FC de terapia: 150–160 bpm (REAB 2020, 6.8.4). O CDI conta frequência: taquicardia sinusal dentro da zona pode gerar choque inapropriado."}, {"n": 3, "titulo": "Primeiro dia após marca-passo", "temas": "1, 6, 8", "texto": "Homem, 80 anos, BAV total, implantou marca-passo DDD ontem, gerador à esquerda. Quer lavar o cabelo sozinho. Você nota soluços desde a manhã.", "opcoes": ["Liberar o membro superior esquerdo sem restrição.", "Imobilizar o ombro esquerdo em tipoia por 6 semanas.", "Mobilização supervisionada sem carga e sem elevação excessiva; ajuda no banho; comunicar o soluço à equipe.", "Ignorar o soluço: é comum após anestesia."], "gabarito": "C", "justificativa": "Cautela com peso e elevação excessiva nas primeiras 6 semanas, mas a mobilização precoce supervisionada foi segura (REAB 2020, 6.8.5). Estimulação diafragmática é complicação descrita (DCEI 2023): o soluço precisa ser comunicado."}, {"n": 4, "titulo": "Palpitação na caminhada", "temas": "3, 5", "texto": "Mulher, 64 anos, pós-IAM, caminhando no corredor com telemetria. Refere palpitação. O monitor mostra 6 batimentos de QRS largo a 180 bpm, que voltam ao sinusal. PA 118/74, consciente.", "opcoes": ["Seguir: foi só uma extrassístole.", "Interromper, sentar ou deitar a paciente, reavaliar os sinais vitais, comunicar a equipe e registrar.", "Iniciar compressões torácicas.", "Reduzir a velocidade e continuar."], "gabarito": "B", "justificativa": "É TV não sustentada (menos de 30 s, sem instabilidade: ECG 2022, 5.1.4.3.5.5). A paciente está estável, mas é arritmia ventricular complexa e nova, critério de limite do esforço (REAB 2020, Tabela 10). C só se evoluir para TV sem pulso ou FV."}], "regras": ["Na FA e no marca-passo, quem manda na intensidade é a carga e o Borg, não o oxímetro.", "Com dispositivo, peça a programação antes de prescrever: o teto de FC vem dela.", "Arritmia nova com sintoma, queda de PA ou QRS largo: para, avalia, comunica, registra."], "fontes": ["Diretriz SBC de Análise e Emissão de Laudos Eletrocardiográficos – 2022 (Arq Bras Cardiol 2022;119(4):638-680) — arquivo ECG.pdf", "Diretriz Brasileira de Fibrilação Atrial – 2025 (Arq Bras Cardiol 2025;122(9):e20250618) — arquivo Fibrilação atrial.pdf", "Diretriz Brasileira de Reabilitação Cardiovascular – 2020 (Arq Bras Cardiol 2020;114(5):943-987) — arquivo Reabilitação cardiovascular.pdf", "Diretriz Brasileira de Dispositivos Cardíacos Eletrônicos Implantáveis – 2023 (Arq Bras Cardiol 2023;120(1):e20220892) — arquivo Dispositivos cardíacos implantáveis.pdf"], "gancho": "Seu paciente está no cicloergômetro. O oxímetro marca 148 bpm e oscila sem parar. Você continua, reduz ou para? O que mais você precisa saber?", "entregavel": ["O que é (uma frase)", "Como reconheço (traçado ou sinal)", "O que muda na minha conduta como fisio", "Uma pergunta-pegadinha para a turma"]};
+const COLORS = ["#E63946","#FF7A59","#F4A300","#2A9D8F","#118AB2","#3D5AFE","#8E44AD","#D63384"];
+const KEY = "missaoCardio_arritmias_v1";
+let state = {done:{}, cases:{}};
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) state = Object.assign(state, s); } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+const $ = s => document.querySelector(s);
+const el = (tag, attrs={}, html="") => { const e=document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html) e.innerHTML=html; return e; };
+const col = n => COLORS[(n-1)%COLORS.length];
+
+/* Tabs */
+function show(v){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected", b.dataset.v===v));
+  document.querySelectorAll("section.view").forEach(s=>s.classList.toggle("on", s.id==="v-"+v));
+  if (v==="missoes") closeMission();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>show(b.dataset.go));
+
+/* Progress */
+function progress(){
+  const d = Object.values(state.done).filter(Boolean).length;
+  const c = Object.keys(state.cases).length;
+  $("#pnum").textContent = `${d} de ${DATA.temas.length} missões`;
+  const right = Object.values(state.cases).filter(v=>v).length;
+  $("#psub").textContent = `Casos: ${c} de ${DATA.casos.length} resolvidos` + (c ? ` · ${right} acerto(s) na 1ª tentativa` : "");
+  $("#pbar").style.width = ((d + c) / (DATA.temas.length + DATA.casos.length) * 100) + "%";
+  $("#cscore").textContent = c ? `Acertos na 1ª tentativa: ${right} de ${c}.` : "";
+}
+$("#reset").onclick = () => { if (confirm("Apagar seu progresso neste aparelho?")) { state={done:{},cases:{}}; save(); renderAll(); } };
+
+/* Início */
+$("#gancho").textContent = DATA.gancho;
+$("#entregavel").textContent = DATA.entregavel.join(" · ");
+
+/* Missões */
+function renderGrid(){
+  const g = $("#mgrid"); g.innerHTML = "";
+  DATA.temas.forEach(t=>{
+    const b = el("button",{class:"mission"});
+    b.innerHTML = `<div class="num" style="background:${col(t.n)}">${t.n}</div><h3>${t.titulo}</h3><div class="meta">4 perguntas · ${t.perolas.length} pérolas</div>` + (state.done[t.n] ? `<span class="done">Concluída</span>` : "");
+    b.onclick = ()=>openMission(t.n);
+    g.appendChild(b);
+  });
+}
+function openMission(n){
+  const t = DATA.temas.find(x=>x.n===n), c = col(n), d = $("#mdetail");
+  $("#mlist").hidden = true; d.hidden = false;
+  let h = `<button class="back" id="mback">← Todas as missões</button>
+  <div class="mhead" style="background:linear-gradient(135deg,${c},${c}cc)"><div class="kicker">Missão ${n}</div><h2>${t.titulo}</h2>
+  <div class="where"><b>Onde ler:</b> ${t.onde}</div></div>
+  <h3>Perguntas</h3>`;
+  t.perguntas.forEach((p,i)=>{
+    h += `<details class="q"><summary><span class="qn" style="background:${c}">${n}.${i+1}</span><span>${p.q}</span><span class="plus">+</span></summary>
+    <div class="ans"><div class="think">Respondeu de cabeça? Agora compare.</div><span class="chip ${p.tag}">${p.tag}</span> ${p.a}<div class="src">Fonte: ${p.src}</div></div></details>`;
+  });
+  h += `<h3>Pérolas clínicas</h3>`;
+  t.perolas.forEach(p=>{ h += `<div class="pearl"><span class="chip ${p.tag}">${p.tag}</span> ${p.t}<div class="src">Fonte: ${p.src}</div></div>`; });
+  h += `<button class="mark ${state.done[n]?'is':''}" id="mdone">${state.done[n]?'Missão concluída ✓ (toque para desmarcar)':'Marcar missão como concluída'}</button>`;
+  d.innerHTML = h;
+  $("#mback").onclick = closeMission;
+  $("#mdone").onclick = ()=>{ state.done[n] = !state.done[n]; save(); progress(); openMission(n); };
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function closeMission(){ $("#mdetail").hidden = true; $("#mlist").hidden = false; renderGrid(); }
+
+/* Casos */
+function renderCases(){
+  const L = $("#clist"); L.innerHTML = "";
+  DATA.casos.forEach(cs=>{
+    const box = el("div",{class:"card case"});
+    box.style.borderTop = `6px solid ${col(cs.n*2-1)}`;
+    box.innerHTML = `<div class="kicker" style="color:${col(cs.n*2-1)}">Caso ${cs.n}</div><h3 style="margin:.2rem 0">${cs.titulo}</h3><div class="tags">Temas ${cs.temas}</div><p>${cs.texto}</p>`;
+    const fb = el("div",{class:"fb"});
+    const tried = new Set();
+    cs.opcoes.forEach((o,i)=>{
+      const L2 = "ABCD"[i], b = el("button",{class:"opt"}, `<b>${L2})</b> ${o}`);
+      b.onclick = ()=>{
+        const right = L2 === cs.gabarito;
+        if (!(cs.n in state.cases)) { state.cases[cs.n] = right && tried.size===0; save(); progress(); }
+        tried.add(L2);
+        if (right){
+          box.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+          b.classList.add("right");
+          fb.className="fb show ok"; fb.innerHTML=`<b>Isso! Alternativa ${cs.gabarito}.</b> ${cs.justificativa}`;
+        } else {
+          b.classList.add("wrong"); b.disabled = true;
+          fb.className="fb show no"; fb.innerHTML=`<b>Ainda não.</b> Releia o caso e pense no tema ${cs.temas.split(",")[0]}. Tente outra alternativa.`;
+        }
+      };
+      box.appendChild(b);
+    });
+    box.appendChild(fb);
+    L.appendChild(box);
+  });
+}
+
+/* Flashcards */
+let deck = [], fi = 0;
+function buildDeck(shuffle){
+  deck = [];
+  DATA.temas.forEach(t=>t.perguntas.forEach((p,i)=>deck.push({n:t.n,id:`${t.n}.${i+1}`,titulo:t.titulo,...p})));
+  if (shuffle) for (let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
+  fi = 0; drawCard();
+}
+function drawCard(){
+  const c = deck[fi], fc = $("#fc");
+  fc.classList.remove("flip");
+  $("#ffront").style.background = `linear-gradient(135deg,${col(c.n)},${col(c.n)}bb)`;
+  $("#ffront").innerHTML = `<div class="kicker">${c.id} · ${c.titulo}</div><div class="qt">${c.q}</div>`;
+  $("#fback").innerHTML = `<div><span class="chip ${c.tag}">${c.tag}</span></div><div style="margin-top:8px">${c.a}</div><div class="src">Fonte: ${c.src}</div>`;
+  $("#fpos").textContent = `Cartão ${fi+1} de ${deck.length}`;
+}
+const flip = ()=>$("#fc").classList.toggle("flip");
+$("#fc").onclick = flip;
+$("#fc").onkeydown = e=>{ if (e.key===" "||e.key==="Enter"){ e.preventDefault(); flip(); } };
+$("#fflip").onclick = flip;
+$("#fnext").onclick = ()=>{ fi=(fi+1)%deck.length; drawCard(); };
+$("#fprev").onclick = ()=>{ fi=(fi-1+deck.length)%deck.length; drawCard(); };
+$("#fshuf").onclick = ()=>buildDeck(true);
+
+/* Regras e fontes */
+function renderStatic(){
+  $("#rlist").innerHTML = DATA.regras.map((r,i)=>`<div class="card rule"><div class="n" style="background:${COLORS[i*3]}">${i+1}</div><div style="font-weight:700;font-size:1.05rem">${r}</div></div>`).join("");
+  $("#flist").innerHTML = DATA.fontes.map(f=>`<li style="margin-bottom:6px">${f}</li>`).join("");
+}
+
+function renderAll(){ renderGrid(); renderCases(); renderStatic(); buildDeck(true); progress(); closeMission(); }
+renderAll();
+</script>
+</body>
+</html>
